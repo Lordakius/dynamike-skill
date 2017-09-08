@@ -166,6 +166,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
         //TODO:get the current slots
         var item = getItem(this.event.request.intent.slots);
         //TODO:process the current slots
+
         //not sure what this does, i assume it will read out the data (see above the big table) in case there is something written there?
         //TODO:basically, we can just delete this out, since this is not really what we want to do (though it might come in handy)
 
@@ -203,7 +204,8 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
             //TODO: here we gotta wait for the input of the user, what are we gonna do with the third parameter of emit? maybe let free
             break;
           case 2:
-
+            this.emit(":ask", "Das ist case 2", "zusatznachricht");
+            break;
 
           default:
 
