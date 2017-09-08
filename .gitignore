@@ -1,4 +1,6 @@
-*.zip
+/*.zip
+node_modules
+package-lock.json
 
 #IDEA stuff
 /.idea
