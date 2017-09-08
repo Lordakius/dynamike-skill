@@ -194,9 +194,8 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
         switch (counter) {
           //just check for the counter and depending on that do something (phases)
           case 0:
-            //TODO: insert daytime (Morgen, Mittag, Abend)
-            var currenterWeather = "Abend";
-            this.emit(":ask", "Guten " + currenterWeather + "Martin hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen, wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!", "");
+            var greeting = "Guten Abend";//TODO: insert daytime (Morgen, Mittag, Abend)
+            this.emit(":ask", "<audio src='https://dynamike.s3-eu-west-1.amazonaws.com/erzaehlertext1-fixed.mp3' /> <break time='1s'/>" + greeting + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!", "");
             break;
           case 1:
             //TODO: the narrator speaks here again (see script)
