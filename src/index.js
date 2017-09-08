@@ -157,20 +157,19 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
     "Start": function() {
         //this.emit(":ask", WELCOME_MESSAGE, HELP_MESSAGE);
         this.emit(":ask", "Hallo. Ich bin Mike! Und wie heißt du?", "Kannst du das noch einmal wiederholen?");
+
         //this.emit(":ask", <speak><audio src="www.youtube.com/watch?v=To1jLeGPqXg" /></speak> + "" + "Oh, wer bist du denn? Ich bin Mike! Und wie heißt du?", HELP_MESSAGE);
         //<audio src="https://carfu.com/audio/carfu-welcome.mp3" />
         //TODO:play introduction here -- we don't use a "meta wrapper", when the app starts, the game starts directly
     },
     "AnswerIntent": function() {
-        //get the current slots
-        //BRIEF: the idea is to not distinguish by STATE, but by slots set. Might be better to use states?
+        //TODO:get the current slots
         var item = getItem(this.event.request.intent.slots);
-        //var username = this.event.request.intent.slots.Benutzername.value;
-
+        //TODO:process the current slots
         //not sure what this does, i assume it will read out the data (see above the big table) in case there is something written there?
         //TODO:basically, we can just delete this out, since this is not really what we want to do (though it might come in handy)
 
-        if (item && item[Object.getOwnPropertyNames(data[0])[0]] != undefined)
+        /*if (item && item[Object.getOwnPropertyNames(data[0])[0]] != undefined)
         {
           console.log("\nMEMO's TEST\n");
             if (USE_CARDS_FLAG)
@@ -181,7 +180,8 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
             else
             {
               //TODO:not hardcode?
-                this.emit(":ask", "Hallo Martin"/*getSpeechDescription(item)*/, REPROMPT_SPEECH);
+                this.emit(":ask", "Hallo Martin"//getSpeechDescription(item)
+                , REPROMPT_SPEECH);
 
             }
         }
@@ -189,11 +189,26 @@ var startHandlers = Alexa.CreateStateHandler(states.START,{
         {
             this.emit(":ask", getBadAnswer(item), getBadAnswer(item));
 
+        }*/
+        switch (counter) {
+          //just check for the counter and depending on that do something (phases)
+          case 0:
+            //TODO: insert daytime (Morgen, Mittag, Abend)
+            var currenterWeather = "Abend";
+            this.emit(":ask", "Guten " + currenterWeather + "Martin hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen, wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!", "");
+            break;
+          case 1:
+            //TODO: the narrator speaks here again (see script)
+            this.emit(":ask", "Hey, ich höre eine Vogelstimme! Kannst du erkennen, was es für eine Vogelart ist? ", "Denk nochmal nach");
+            //TODO: here we gotta wait for the input of the user, what are we gonna do with the third parameter of emit? maybe let free
+            break;
+          case 2:
+
+
+          default:
+
         }
-        //TODO:how to check if the name match AMAZON.DE_FIRST_NAME
-        //if(username != undefined) {
-        //  this.emit(":ask", "Hallo " + username, "Hey " + username);
-        //}
+        counter++;
     },
     "QuizIntent": function() {
         this.handler.state = states.QUIZ;
