@@ -264,13 +264,13 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
     switch (counter) {
       //just check for the counter and depending on that do something (phases)
       case 0:
-        var greeting = "Guten Abend";//TODO: insert daytime (Morgen, Mittag, Abend)
+        let greeting = "Guten Abend";//TODO: insert daytime (Morgen, Mittag, Abend)
         this.emit(":ask",
           ssml.audio("erzaehler1") +
           ssml.break(1) + greeting + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!" +
           ssml.break(1) + ssml.audio("erzaehler2") +
           ssml.break(1) + ssml.audio("uhu") +
-          " Hey, ich höre eine Vogelstimme! " +
+          ssml.pitchStart("high") + " Hey, " + ssml.pitchEnd() + "ich höre eine Vogelstimme! " +
           ssml.audio("uhu") +
           " Kannst du erkennen, was es für eine Vogelart ist? ");
         break;
