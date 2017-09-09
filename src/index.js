@@ -26,8 +26,8 @@ class AtmoService {
 
 class Ssml {
 
-  constructor() {
-    this._atmo = new AtmoService();
+  constructor(atmoService) {
+    this._atmo = atmoService;
   }
 
   break(lengthInSeconds) {
@@ -57,6 +57,15 @@ class Ssml {
 
   pitchEnd() {
     return "</prosody>"
+  }
+
+}
+
+class GreetingService{
+
+  //TODO: choose the correct one based on time
+  getGreeting(){
+    return "Guten Abend";
   }
 
 }
@@ -198,7 +207,8 @@ var states = {
   QUIZ: "_QUIZ"
 };
 
-var ssml = new Ssml();
+const s = new Ssml(new AtmoService());
+const gs = new GreetingService();
 
 const handlers = {
   //here we land first and add the current state to our session
@@ -264,26 +274,25 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
     switch (counter) {
       //just check for the counter and depending on that do something (phases)
       case 0:
-        let greeting = "Guten Abend";//TODO: insert daytime (Morgen, Mittag, Abend)
         this.emit(":ask",
-          ssml.audio("erzaehler1") +
-          ssml.break(1) + greeting + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!" +
-          ssml.break(1) + ssml.audio("erzaehler2") +
-          ssml.break(1) + ssml.audio("uhu") +
-          ssml.pitchStart("high") + " Hey, " + ssml.pitchEnd() + "ich höre eine Vogelstimme! " +
-          ssml.audio("uhu") +
+          s.audio("erzaehler1") +
+          s.break(1) + gs.getGreeting() + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!" +
+          s.break(1) + s.audio("erzaehler2") +
+          s.break(1) + s.audio("uhu") +
+          s.pitchStart("high") + " Hey, " + s.pitchEnd() + "ich höre eine Vogelstimme! " +
+          s.audio("uhu") +
           " Kannst du erkennen, was es für eine Vogelart ist? ");
         break;
       case 1:
         this.emit(":ask",
-          ssml.pitchStart("x-high") + "Falsch. " + ssml.pitchEnd() +
-          ssml.pitchStart("high") + "Du dummes dummes Kind!" + ssml.pitchEnd() +
-          ssml.break(1) + " versuche es nochmal!");
+          s.pitchStart("x-high") + "Falsch. " + s.pitchEnd() +
+          s.pitchStart("high") + "Du dummes dummes Kind!" + s.pitchEnd() +
+          s.break(1) + " versuche es nochmal!");
         break;
       case 2:
         this.emit(":ask",
-          ssml.audio("erzaehler3") +
-          ssml.pitchStart("x-high") + "Diese Stelle kenne ich!" + ssml.pitchEnd() +
+          s.audio("erzaehler3") +
+          s.pitchStart("x-high") + "Diese Stelle kenne ich!" + s.pitchEnd() +
           "Hier habe ich mit meinem Raumschiff einen Baum gestreift! Dort sieht man noch die Kratzspuren in der Baumrinde. Es gibt zwei Möglichkeiten: Wir können nun Richtung See oder zur Lichtung. Wo sollen wir hin?");
         break;
       case 3:
