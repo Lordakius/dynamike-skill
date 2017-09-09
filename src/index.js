@@ -256,8 +256,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
   "AnswerIntent": function () {
     //TODO:get the current slots
     //var item = getItem(this.event.request.intent.slots);
-    console.log(this.event.request.intent.slots);
-    var username = this.event.request.intent.slots.BenutzerName.value;
+    console.log(this.event.request.intent.slots); //returns log for debuggung on lambda
 
     //not sure what this does, i assume it will read out the data (see above the big table) in case there is something written there?
     //TODO:basically, we can just delete this out, since this is not really what we want to do (though it might come in handy)
@@ -286,9 +285,10 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
     switch (counter) {
       //just check for the counter and depending on that do something (phases)
       case 0:
+        this.attributes["Benutzername"] = this.event.request.intent.slots.BenutzerName.value;
         this.emit(":ask",
         //TODO: speak username as a name
-          s.break(1) + gs.getGreeting() + username +s.break(0.5) + "Ich bin auf der Suche nach meinem Raumschiff. Bitte hilf mir dabei." +
+          s.break(1) + gs.getGreeting() + s.break(0.2) + this.attributes["Benutzername"] +s.break(0.5) + "Ich bin auf der Suche nach meinem Raumschiff. Bitte hilf mir dabei." +
           s.break(1) + s.audio("erzaehler2") +
           s.break(1) + s.audio("uhu") +
           s.pitchStart("high") + " Hey, " + s.pitchEnd() + "ich höre einen Vogel! " +
@@ -303,7 +303,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
         break;
       case 2:
         this.emit(":ask",
-          s.pitchStart("high") + "Super" + s.pitchEnd() + username + ", das war richtig." + s.break(1) +
+          s.pitchStart("high") + "Super" + s.pitchEnd() + this.attributes["Benutzername"] + ", das war richtig." + s.break(1) +
           "Der Uhu ist die größte Art von Eulen. Er frisst gerne Mäuse und sogar andere Vögel. " +
           "Darum werden Uhu's von bestimmten Voegeln geärgert! Wenn sie einen Uhu tagsüber entdecken, fangen sie laut an zu schreien. " +
           s.audio("erzaehler3") +
@@ -312,28 +312,29 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
         break;
       case 3:
         this.emit(":ask",
-          //TODO:add steps?
+          //TODO:add steps audio?
           s.audio("erzaehler4") +
           "Hier ist es! Hier habe ich mein Raumschiff geparkt!" +
-          s.pitchStart("high") + "Juhu" + s.pitchEnd() + //how to pronounce "huhu"?
+          s.pitchStart("high") + "Ju hu" + s.pitchEnd() + //how to pronounce "juhu"?
           "Endlich habe ich es mit deiner Hilfe gefunden!" +
-
+          //cobblesnitch
           s.audio("erzaehler5") +
           "Er will eine Frage beantwortet haben, sonst lässt er uns nicht zum Raumschiff." +
           s.break(0.5) + "Oh je. Das müssen wir zusammen machen!" +
           s.audio("cobblesnitch2") +
 
-          "Hier kommt die erste Frage " + s.break(1) +
+          "Hier kommt die erste Frage. " + s.break(1) +
           "Was frisst ein Uhu gerne?" +
-          "Äpfel?" + s.break(0.3) +
-          "Mäuse?" + s.break(0.1) +
-          "Oder Hundekuchen?" + s.break(0.5));
+          "Äpfel" + s.break(0.3) +
+          "Mäuse" + s.break(0.1) +
+          "Oder Hundekuchen." + s.break(0.5));
         break;
       case 4:
+        //check answer
         this.emit(":tell",
-          "gut gemacht" + username +
+          "gut gemacht" + this.attributes["Benutzername"] +
           s.audio("erzaehler6") +
-          "Danke" + username + ", dass du mir geholfen hast!" + s.break(1) +
+          "Danke" + this.attributes["Benutzername"] + ", dass du mir geholfen hast!" + s.break(1) +
           s.audio("erzaehler7") +
           s.audio("outro"));
         break;
