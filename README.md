@@ -13,7 +13,7 @@ upload zip to your lambda
 ## trouble shooting MP3
 
 1. check correct configuration: 16kHz sample rate, 48 kb/s bit rate, max length 90s
-2. if mismatch: convert via ```docker run -v `pwd`:`pwd` -w `pwd` jrottenberg/ffmpeg -i erzaehlertext1.mp3 -ar 16k -b:a 48k erzaehlertext1-fixed.mp3```
+2. if mismatch: convert manually via ```docker run -v `pwd`:`pwd` -w `pwd` jrottenberg/ffmpeg -i erzaehlertext1.mp3 -ar 16k -b:a 48k erzaehlertext1-fixed.mp3``` or use the prepared script `resources/orig2fixed.sh`
 3. upload on bucket and make verify public availability
 
 ## references
