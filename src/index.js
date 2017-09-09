@@ -40,7 +40,7 @@ class Ssml {
    * @returns {string}
    */
   audio(baseName) {
-    if (baseName === 'uhu' || baseName === 'spaceship1' || baseName === 'spaceship2') {
+    if (baseName === 'uhu' || baseName === 'spaceship1' || baseName === 'spaceship2' || baseName === 'outro') {
       //this audios do not support any atmo
       return "<audio src='https://dynamike.s3-eu-west-1.amazonaws.com/" + baseName + ".MP3' />"
     }
@@ -63,9 +63,18 @@ class Ssml {
 
 class GreetingService{
 
-  //TODO: choose the correct one based on time
   getGreeting(){
-    return "Guten Abend";
+    var d = new Date(); // for now
+    var hour = d.getHours();
+    var returnSpeech = "Ist es nicht etwas spät? "; //00-05 //TODO:rework this message
+    if(hour >= 5 && hour < 10) {
+      returnSpeech = "guten Morgen ";
+    } else if (hour >= 10 && hour < 17) {
+      returnSpeech = "guten Mittag ";
+    } else if (hour >= 17 && hour < 25) {
+      returnSpeech = "Guten Abend ";
+    }
+    return returnSpeech;
   }
 
 }
@@ -237,7 +246,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
   "Start": function () {
     //this.emit(":ask", WELCOME_MESSAGE, HELP_MESSAGE);
     this.emit(":ask",
-      s.audio("erzaehler1") + s.break(1) + "Hallo. Ich bin Mike! Und wie heißt du?");
+      s.audio("erzaehler1") + s.break(1) + "Hallo. Ich bin Mike! Und wie ist dein Vorname?");
     counter = 0;
 
     //this.emit(":ask", <speak><audio src="www.youtube.com/watch?v=To1jLeGPqXg" /></speak> + "" + "Oh, wer bist du denn? Ich bin Mike! Und wie heißt du?", HELP_MESSAGE);
@@ -246,8 +255,9 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
   },
   "AnswerIntent": function () {
     //TODO:get the current slots
-    var item = getItem(this.event.request.intent.slots);
-    //TODO:process the current slots
+    //var item = getItem(this.event.request.intent.slots);
+    console.log(this.event.request.intent.slots);
+    var username = this.event.request.intent.slots.BenutzerName.value;
 
     //not sure what this does, i assume it will read out the data (see above the big table) in case there is something written there?
     //TODO:basically, we can just delete this out, since this is not really what we want to do (though it might come in handy)
@@ -277,34 +287,59 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
       //just check for the counter and depending on that do something (phases)
       case 0:
         this.emit(":ask",
-          s.break(1) + gs.getGreeting() + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!" +
+        //TODO: speak username as a name
+          s.break(1) + gs.getGreeting() + username +s.break(0.5) + "Ich bin auf der Suche nach meinem Raumschiff. Bitte hilf mir dabei." +
           s.break(1) + s.audio("erzaehler2") +
           s.break(1) + s.audio("uhu") +
-          s.pitchStart("high") + " Hey, " + s.pitchEnd() + "ich höre eine Vogelstimme! " +
+          s.pitchStart("high") + " Hey, " + s.pitchEnd() + "ich höre einen Vogel! " +
+          s.audio("uhu") +
           s.audio("uhu") +
           " Kannst du erkennen, was es für eine Vogelart ist? ");
         break;
       case 1:
         this.emit(":ask",
-          s.pitchStart("x-high") + "Falsch. " + s.pitchEnd() +
-          s.pitchStart("high") + "Du dummes dummes Kind!" + s.pitchEnd() +
-          s.break(1) + " versuche es nochmal!");
+          s.pitchStart("high") + "Falsch. " + s.pitchEnd() +
+          s.break(1) + " versuch es nochmal!");
         break;
       case 2:
         this.emit(":ask",
-          s.pitchStart("high") + "Super Martin, das war richtig " + s.pitchEnd() + s.break(1) +
+          s.pitchStart("high") + "Super" + s.pitchEnd() + username + ", das war richtig." + s.break(1) +
+          "Der Uhu ist die größte Art von Eulen. Er frisst gerne Mäuse und sogar andere Vögel. " +
+          "Darum werden Uhu's von bestimmten Voegeln geärgert! Wenn sie einen Uhu tagsüber entdecken, fangen sie laut an zu schreien. " +
           s.audio("erzaehler3") +
-          s.pitchStart("high") + "Diese Stelle kenne ich!" + s.pitchEnd() +
-          "Hier habe ich mit meinem Raumschiff einen Baum gestreift! Dort sieht man noch die Kratzspuren in der Baumrinde. Es gibt zwei Möglichkeiten: Wir können nun Richtung See oder zur Lichtung. Wo sollen wir hin?");
+          s.pitchStart("high") + "Oh," + s.pitchEnd() + "diese Stelle kenne ich!" + s.break(1) +
+          "Hier habe ich mit meinem Raumschiff einen Baum gestreift! Dort sieht man noch die Kratzspuren in der Baumrinde." + s.break(1) + " Es gibt zwei Möglichkeiten: Wir können nun Richtung See oder zur Lichtung. Wo sollen wir hin?");
         break;
       case 3:
         this.emit(":ask",
-          "und so weiter... und so weiter...");
+          //TODO:add steps?
+          s.audio("erzaehler4") +
+          "Hier ist es! Hier habe ich mein Raumschiff geparkt!" +
+          s.pitchStart("high") + "Juhu" + s.pitchEnd() + //how to pronounce "huhu"?
+          "Endlich habe ich es mit deiner Hilfe gefunden!" +
+
+          s.audio("erzaehler5") +
+          "Er will eine Frage beantwortet haben, sonst lässt er uns nicht zum Raumschiff." +
+          s.break(0.5) + "Oh je. Das müssen wir zusammen machen!" +
+          s.audio("cobblesnitch2") +
+
+          "Hier kommt die erste Frage " + s.break(1) +
+          "Was frisst ein Uhu gerne?" +
+          "Äpfel?" + s.break(0.3) +
+          "Mäuse?" + s.break(0.1) +
+          "Oder Hundekuchen?" + s.break(0.5));
+        break;
+      case 4:
+        this.emit(":tell",
+          "gut gemacht" + username +
+          s.audio("erzaehler6") +
+          "Danke" + username + ", dass du mir geholfen hast!" + s.break(1) +
+          s.audio("erzaehler7") +
+          s.audio("outro"));
         break;
       default:
-        this.emit(":ask",
-          "Jetzt ist aber auch mal Schluss...");
-
+        this.emit(":tell",
+          "etwas ist schiefgelaufen. Bitte melde dich bei dem Entwickler. Danke für das Ausprobieren");
     }
     counter++;
   },
