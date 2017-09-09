@@ -292,7 +292,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
       case 2:
         this.emit(":ask",
           s.audio("erzaehler3") +
-          s.pitchStart("x-high") + "Diese Stelle kenne ich!" + s.pitchEnd() +
+          s.pitchStart("high") + "Diese Stelle kenne ich!" + s.pitchEnd() +
           "Hier habe ich mit meinem Raumschiff einen Baum gestreift! Dort sieht man noch die Kratzspuren in der Baumrinde. Es gibt zwei Möglichkeiten: Wir können nun Richtung See oder zur Lichtung. Wo sollen wir hin?");
         break;
       case 3:
