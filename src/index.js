@@ -236,7 +236,9 @@ const handlers = {
 var startHandlers = Alexa.CreateStateHandler(states.START, {
   "Start": function () {
     //this.emit(":ask", WELCOME_MESSAGE, HELP_MESSAGE);
-    this.emit(":ask", "Hallo. Ich bin Mike! Und wie heißt du?", "Kannst du das noch einmal wiederholen?");
+    this.emit(":ask",
+      s.audio("erzaehler1") + s.break(1) + "Hallo. Ich bin Mike! Und wie heißt du?");
+    counter = 0;
 
     //this.emit(":ask", <speak><audio src="www.youtube.com/watch?v=To1jLeGPqXg" /></speak> + "" + "Oh, wer bist du denn? Ich bin Mike! Und wie heißt du?", HELP_MESSAGE);
     //<audio src="https://carfu.com/audio/carfu-welcome.mp3" />
@@ -275,7 +277,6 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
       //just check for the counter and depending on that do something (phases)
       case 0:
         this.emit(":ask",
-          s.audio("erzaehler1") +
           s.break(1) + gs.getGreeting() + " Martin. Hast du vielleicht mein Raumschiff gesehen? Ich habe total vergessen wo ich es geparkt habe! Und ohne komme ich nicht auf meinen Heimatplaneten Nova zurück!" +
           s.break(1) + s.audio("erzaehler2") +
           s.break(1) + s.audio("uhu") +
@@ -291,6 +292,7 @@ var startHandlers = Alexa.CreateStateHandler(states.START, {
         break;
       case 2:
         this.emit(":ask",
+          s.pitchStart("high") + "Super Martin, das war richtig " + s.pitchEnd() + s.break(1) +
           s.audio("erzaehler3") +
           s.pitchStart("high") + "Diese Stelle kenne ich!" + s.pitchEnd() +
           "Hier habe ich mit meinem Raumschiff einen Baum gestreift! Dort sieht man noch die Kratzspuren in der Baumrinde. Es gibt zwei Möglichkeiten: Wir können nun Richtung See oder zur Lichtung. Wo sollen wir hin?");
